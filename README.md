@@ -1,10 +1,17 @@
-# DraftDash 🚀
+# DraftDash
 
-**アイデアから記事のドラフトを 5 分で作成する、AI 搭載型コンテンツ作成支援ツール**
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/) [![n8n](https://img.shields.io/badge/n8n-%23F7796B?style=for-the-badge&logo=n8n&logoColor=white)](https://n8n.io/) [![Google Gemini](https://img.shields.io/badge/Google%20Gemini-4285F4?style=for-the-badge&logo=google-gemini&logoColor=white)](https://gemini.google.com/)
 
-[![Vercel Deployment](https://draftdash-frontend.vercel.app/)]
+## **アイデアから記事のドラフトを 5 分で作成する、AI 搭載型コンテンツ作成支援ツール**
 
-![DraftDash Demo](ここにあなたのツールのスクリーンショット画像を挿入)
+<p align="center">
+  <a href="https://draftdash-frontend.vercel.app/" target="_blank">
+    <img src="https://img.shields.io/badge/デモサイトを見る-007ACC?style=for-the-badge&logo=vercel&logoColor=white" alt="デモサイト">
+  </a>
+  <a href="public\images\demo.png" target="_blank">
+    <img src="https://img.shields.io/badge/デモ動画を見る-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="デモ動画">
+  </a>
+</p>
 
 ---
 
