@@ -1,103 +1,153 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useState, FormEvent } from "react";
+import axios from "axios";
+
+export default function HomePage() {
+  // フォームの各入力値を管理するためのState
+  const [theme, setTheme] = useState("");
+  const [target, setTarget] = useState("");
+  const [goal, setGoal] = useState("");
+  const [tone, setTone] = useState("です・ます調"); // デフォルト値を設定
+
+  // ローディング状態と結果メッセージを管理するためのState
+  const [isLoading, setIsLoading] = useState(false);
+  const [resultMessage, setResultMessage] = useState("");
+
+  // フォーム送信時の処理
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsLoading(true);
+    setResultMessage("");
+
+    // Nodeの環境に応じて使用するWebhook URLを自動で切り替える
+    const webhookUrl =
+      process.env.NODE_ENV === "production"
+        ? process.env.NEXT_PUBLIC_N8N_WEBHOOK_PROD_URL
+        : process.env.NEXT_PUBLIC_N8N_WEBHOOK_DEV_URL;
+
+    if (!webhookUrl) {
+      setResultMessage("エラー: Webhook URLが設定されていません。");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      // 決定したURLに対してリクエストを送信
+      await axios.post(webhookUrl, {
+        theme,
+        target,
+        goal,
+        tone,
+      });
+
+      setResultMessage(
+        "ドラフトの生成リクエストを受け付けました。完了後、Notionをご確認ください。"
+      );
+    } catch (error) {
+      console.error("API Request Failed:", error);
+      setResultMessage(
+        "エラーが発生しました。時間をおいて再度お試しください。"
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <main className="max-w-3xl mx-auto mb-10 p-6">
+      <header className="text-center mb-12">
+        <h1 className="text-4xl font-bold mb-2">DraftDash</h1>
+        <p className="text-lg text-gray-600">
+          アイデアから記事のドラフトを5分で作成
+        </p>
+      </header>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      <form onSubmit={handleSubmit}>
+        <div className="mb-6">
+          <label
+            htmlFor="theme"
+            className="block mb-2 text-lg font-bold text-gray-800"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            記事のテーマ / メインキーワード
+          </label>
+          <input
+            id="theme"
+            type="text"
+            value={theme}
+            onChange={(e) => setTheme(e.target.value)}
+            required
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            placeholder="例: Next.js ISR"
+          />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+
+        <div className="mb-6">
+          <label
+            htmlFor="target"
+            className="block mb-2 text-lg font-bold text-gray-800"
+          >
+            ターゲット読者
+          </label>
+          <textarea
+            id="target"
+            value={target}
+            onChange={(e) => setTarget(e.target.value)}
+            rows={3}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            placeholder="例: プログラミング学習を始めたばかりの学生"
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
+        </div>
+
+        <div className="mb-6">
+          <label
+            htmlFor="goal"
+            className="block mb-2 text-lg font-bold text-gray-800"
+          >
+            この記事の最も伝えたい結論 / ゴール
+          </label>
+          <textarea
+            id="goal"
+            value={goal}
+            onChange={(e) => setGoal(e.target.value)}
+            rows={3}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            placeholder="例: ISRを使えば、ビルド時間を短縮しつつ最新の情報を表示できることを理解してもらう"
           />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+        </div>
+
+        <div className="mb-12">
+          <label
+            htmlFor="tone"
+            className="block mb-2 text-lg font-bold text-gray-800"
+          >
+            文体
+          </label>
+          <select
+            id="tone"
+            value={tone}
+            onChange={(e) => setTone(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+          >
+            <option value="です・ます調">です・ます調（丁寧）</option>
+            <option value="だ・である調">だ・である調（断定的）</option>
+          </select>
+        </div>
+
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-lg px-5 py-3.5 text-center transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+          {isLoading ? "生成中..." : "ドラフトを生成する"}
+        </button>
+      </form>
+
+      {resultMessage && (
+        <div className="mt-8 p-5 bg-gray-100 rounded-lg text-center">
+          <p className="text-gray-800">{resultMessage}</p>
+        </div>
+      )}
+    </main>
   );
 }
