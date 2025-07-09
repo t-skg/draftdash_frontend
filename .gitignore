@@ -33,6 +33,9 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# .env.local.example はGitの管理対象に含める
+!/.env.local.example
+
 # vercel
 .vercel
 
