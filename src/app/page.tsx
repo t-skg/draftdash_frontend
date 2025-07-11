@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import axios from "axios";
+import { FiArrowRight } from "react-icons/fi";
 
 export default function HomePage() {
   // フォームの各入力値を管理するためのState
@@ -55,99 +56,118 @@ export default function HomePage() {
   };
 
   return (
-    <main className="max-w-3xl mx-auto mb-10 p-6">
-      <header className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-2">DraftDash</h1>
-        <p className="text-lg text-gray-600">
-          アイデアから記事のドラフトを5分で作成
-        </p>
-      </header>
+    <main className="flex min-h-screen w-full items-center justify-center bg-gray-50 p-4 sm:p-8">
+      <div className="w-full max-w-2xl">
+        <header className="text-center mb-10">
+          <h1 className="text-5xl md:text-6xl font-extrabold mb-3 text-zinc-900">
+            DraftDash
+          </h1>
+          <p className="text-lg text-slate-500">
+            アイデアから記事のドラフトを5分で作成
+          </p>
+        </header>
 
-      <form onSubmit={handleSubmit}>
-        <div className="mb-6">
-          <label
-            htmlFor="theme"
-            className="block mb-2 text-lg font-bold text-gray-800"
-          >
-            記事のテーマ / メインキーワード
-          </label>
-          <input
-            id="theme"
-            type="text"
-            value={theme}
-            onChange={(e) => setTheme(e.target.value)}
-            required
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-            placeholder="例: Next.js ISR"
-          />
-        </div>
-
-        <div className="mb-6">
-          <label
-            htmlFor="target"
-            className="block mb-2 text-lg font-bold text-gray-800"
-          >
-            ターゲット読者
-          </label>
-          <textarea
-            id="target"
-            value={target}
-            onChange={(e) => setTarget(e.target.value)}
-            rows={3}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-            placeholder="例: プログラミング学習を始めたばかりの学生"
-          />
-        </div>
-
-        <div className="mb-6">
-          <label
-            htmlFor="goal"
-            className="block mb-2 text-lg font-bold text-gray-800"
-          >
-            この記事の最も伝えたい結論 / ゴール
-          </label>
-          <textarea
-            id="goal"
-            value={goal}
-            onChange={(e) => setGoal(e.target.value)}
-            rows={3}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-            placeholder="例: ISRを使えば、ビルド時間を短縮しつつ最新の情報を表示できることを理解してもらう"
-          />
-        </div>
-
-        <div className="mb-12">
-          <label
-            htmlFor="tone"
-            className="block mb-2 text-lg font-bold text-gray-800"
-          >
-            文体
-          </label>
-          <select
-            id="tone"
-            value={tone}
-            onChange={(e) => setTone(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-          >
-            <option value="です・ます調">です・ます調（丁寧）</option>
-            <option value="だ・である調">だ・である調（断定的）</option>
-          </select>
-        </div>
-
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-lg px-5 py-3.5 text-center transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg border border-gray-200"
         >
-          {isLoading ? "生成中..." : "ドラフトを生成する"}
-        </button>
-      </form>
+          <div className="mb-6">
+            <label
+              htmlFor="theme"
+              className="block mb-2 text-sm font-bold text-gray-700 uppercase tracking-wider"
+            >
+              記事のテーマ / メインキーワード
+            </label>
+            <input
+              id="theme"
+              type="text"
+              value={theme}
+              onChange={(e) => setTheme(e.target.value)}
+              required
+              className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:bg-white transition-colors"
+              placeholder="例: Next.js ISR"
+            />
+          </div>
 
-      {resultMessage && (
-        <div className="mt-8 p-5 bg-gray-100 rounded-lg text-center">
-          <p className="text-gray-800">{resultMessage}</p>
-        </div>
-      )}
+          <div className="mb-6">
+            <label
+              htmlFor="target"
+              className="block mb-2 text-sm font-bold text-gray-700 uppercase tracking-wider"
+            >
+              ターゲット読者
+            </label>
+            <textarea
+              id="target"
+              value={target}
+              onChange={(e) => setTarget(e.target.value)}
+              rows={3}
+              className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:bg-white transition-colors"
+              placeholder="例: プログラミング学習を始めたばかりの学生"
+            />
+          </div>
+
+          <div className="mb-6">
+            <label
+              htmlFor="goal"
+              className="block mb-2 text-sm font-bold text-gray-700 uppercase tracking-wider"
+            >
+              この記事の最も伝えたい結論 / ゴール
+            </label>
+            <textarea
+              id="goal"
+              value={goal}
+              onChange={(e) => setGoal(e.target.value)}
+              rows={3}
+              className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:outline-none focus:bg-white transition-colors"
+              placeholder="例: ISRのメリットを理解してもらう"
+            />
+          </div>
+
+          <div className="mb-8">
+            <label
+              htmlFor="tone"
+              className="block mb-2 text-sm font-bold text-gray-700 uppercase tracking-wider"
+            >
+              文体
+            </label>
+            <select
+              id="tone"
+              value={tone}
+              onChange={(e) => setTone(e.target.value)}
+              className="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg text-gray-800 focus:outline-none focus:bg-white transition-colors appearance-none bg-no-repeat"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
+                backgroundPosition: "right 0.75rem center",
+                backgroundSize: "1.5em 1.5em",
+              }}
+            >
+              <option value="です・ます調">です・ます調（丁寧）</option>
+              <option value="だ・である調">だ・である調（断定的）</option>
+            </select>
+          </div>
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full flex items-center justify-center gap-2 text-white bg-gradient-to-r from-green-400 to-teal-500 hover:from-green-500 hover:to-teal-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-bold rounded-lg text-lg px-5 py-3.5 text-center transition-all duration-200 ease-in-out transform hover:scale-102 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
+          >
+            {isLoading ? (
+              "生成中..."
+            ) : (
+              <>
+                ドラフトを生成する
+                <FiArrowRight className="ml-2" />
+              </>
+            )}
+          </button>
+        </form>
+
+        {resultMessage && (
+          <div className="mt-8 p-5 bg-white rounded-lg text-center border border-gray-200 shadow-sm">
+            <p className="text-gray-700">{resultMessage}</p>
+          </div>
+        )}
+      </div>
     </main>
   );
 }
